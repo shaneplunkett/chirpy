@@ -7,14 +7,17 @@ import (
 )
 
 func main() {
+	const filepath = "."
+	const port = "8080"
+
 	mux := http.NewServeMux()
-	svr := http.Server{
-		Addr:    ":8080",
+	mux.Handle("/", http.FileServer(http.Dir(filepath)))
+
+	srv := &http.Server{
+		Addr:    ":" + port,
 		Handler: mux,
 	}
-	log.Infof("Server running on: %s", svr.Addr)
-	err := svr.ListenAndServe()
-	if err != nil {
-		log.Errorf("Error serving connection: %s", err)
-	}
+
+	log.Infof("Server running from: %s on port: %s\n", filepath, port)
+	log.Fatal(srv.ListenAndServe())
 }
